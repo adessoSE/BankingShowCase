@@ -1,0 +1,81 @@
+<mat-card class="bg-light">
+    <mat-card-title>Credit Scoring</mat-card-title>
+    <mat-card-content>
+        <form [formGroup]="saveForm">
+            <mat-form-field class="mat-inline">
+                <mat-select matInput type="text" placeholder="Name (ID)" formControlName="name">
+                    <mat-option value="Marcel Rathmann (573202123)">
+                        Marcel Rathmann (573202123)
+                    </mat-option>
+                    <mat-option value="Brian Kingston (723185093)">
+                        Brian Kingston (723185093)
+                    </mat-option>
+                    <mat-option value="Heather Crown (983756401)">
+                        Heather Crown (983756401)
+                    </mat-option>
+                    <mat-option value="Stephan Brandt (987564321)">
+                        Stephan Brandt (987564321)
+                    </mat-option>
+                    <mat-option value="Helen Book (675842746)">
+                        Helen Book (675842746)
+                    </mat-option>
+                    <mat-option value="Harry Potter (563920746)">
+                        Harry Potter (563920746)
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="mat-inline">
+                <input matInput type="text" placeholder="Betrag (z.B 150000.00)" formControlName="betrag">
+            </mat-form-field>
+            <mat-form-field class="mat-inline">
+                <mat-select matInput type="text" placeholder="Zahlungstyp" formControlName="zahlungstyp">
+                    <mat-option value="CASH-IN">
+                        CASH-IN
+                    </mat-option>
+                    <mat-option value="CASH-OUT">
+                        CASH-OUT
+                    </mat-option>
+                    <mat-option value="DEBIT">
+                        DEBIT
+                    </mat-option>
+                    <mat-option value="PAYMENT">
+                        PAYMENT
+                    </mat-option>
+                    <mat-option value="TRANSFER">
+                        TRANSFER
+                    </mat-option>
+                    <mat-option value="DEPOSIT">
+                        DEPOSIT
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field class="mat-inline">
+                <textarea matInput type="text" placeholder="Verwendungszweck" rows="5" ></textarea>
+            </mat-form-field>
+            <mat-form-field class="mat-inline">
+                <mat-datepicker #myDatepicker></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
+                <input matInput [matDatepicker]="myDatepicker" placeholder="Wähle ein Datum" formControlName="date">                 
+            </mat-form-field>
+            <br>
+            <button mat-raised-button color="primary" (click)="savePaymentData()" *ngIf="!isLoading">Speichern</button>
+            <button mat-raised-button class="float-right" (click)="resetForm()" color="primary" *ngIf="!isLoading">Reset</button>
+
+            <div class="spinner container-fluid d-flex flex-row align-items-stretch justify-content-center" *ngIf="isLoading">
+                <svg viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                    <circle class="length" fill="none" stroke-width="8" stroke-linecap="round" cx="33" cy="33" r="28">
+                    </circle>
+                </svg>
+                <svg viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                    <circle fill="none" stroke-width="8" stroke-linecap="round" cx="33" cy="33" r="28"></circle>
+                </svg>
+                <svg viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                    <circle fill="none" stroke-width="8" stroke-linecap="round" cx="33" cy="33" r="28"></circle>
+                </svg>
+                <svg viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                    <circle fill="none" stroke-width="8" stroke-linecap="round" cx="33" cy="33" r="28"></circle>
+                </svg>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>
