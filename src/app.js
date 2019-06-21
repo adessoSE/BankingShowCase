@@ -3,10 +3,10 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: '192.168.2.102',
     user: 'root',
     password: '',
-    database: 'bankingshowcase'
+    database: 'haushaltsbuch'
 });
 
 db.connect((err) => {
