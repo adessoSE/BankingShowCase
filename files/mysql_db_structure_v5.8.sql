@@ -56,25 +56,24 @@ DROP VIEW IF EXISTS `cash_ins`;
 
 
 CREATE VIEW `expenses` AS
-SELECT   `payment_data`.`nameorig`                                                AS `id_orig`, 
-         count(`payment_data`.`nameorig`)                                         AS `number_expenses`,
-         avg((`payment_data`.`oldbalanceorig` - `payment_data`.`newbalanceorig`)) AS `average_spent`,
-         sum((`payment_data`.`oldbalanceorig` - `payment_data`.`newbalanceorig`)) AS `sum_spent`, 
+SELECT   `payment_data`.`nameOrig`                                                AS `id_orig`, 
+         count(`payment_data`.`nameOrig`)                                         AS `number_expenses`,
+         avg(`payment_data`.`amount`) AS `average_spent`,
+         sum(payment_data`.`amount`) AS `sum_spent`, 
          sum(`payment_data`.`isunauthorizedoverdraft`)                            AS `number_of_overdraft_attempts`,
-         max(`payment_data`.`newbalanceorig`)                                     AS `max_balance`,
-         min(`payment_data`.`newbalanceorig`)                                     AS `min_balance`
+         max(`payment_data`.`oldBalanceOrig`)                                     AS `max_balance`,
+         min(`payment_data`.`newBalanceOrig`)                                     AS `min_balance`
 FROM     `payment_data` 
 WHERE    (`payment_data`.`action` <> 'CASH_IN') 
-GROUP BY `payment_data`.`nameorig`;
+GROUP BY `payment_data`.`nameOrig`;
 
 CREATE VIEW `receives` AS
 SELECT   `payment_data`.`namedest`                                                AS `id_dest`, 
          count(`payment_data`.`namedest`)                                         AS `number_receives`,
-         avg((`payment_data`.`newbalancedest` - `payment_data`.`oldbalancedest`)) AS `average_received`,
-         sum((`payment_data`.`newbalancedest` - `payment_data`.`oldbalancedest`)) AS `sum_received`,
-         sum(`payment_data`.`isunauthorizedoverdraft`)                            AS `number_of_overdraft_attempts_dest`,
-         max(`payment_data`.`newbalancedest`)                                     AS `max_balance_dest`,
-         min(`payment_data`.`newbalancedest`)                                     AS `min_balance_dest`
+         avg(`payment_data`.`amount`) AS `average_received`,
+         sum(`payment_data`.`amount`) AS `sum_received`,
+         max(`payment_data`.`newBalanceDest`)                                     AS `max_balance_dest`,
+         min(`payment_data`.`oldBalanceDest`)                                     AS `min_balance_dest`
 FROM     `payment_data` 
 GROUP BY `payment_data`.`namedest`;
 
@@ -82,12 +81,12 @@ GROUP BY `payment_data`.`namedest`;
 
 CREATE VIEW `cash_ins` AS
 SELECT   `payment_data`.`nameorig`                                                  AS `id_cash`, 
-         count(`payment_data`.`nameorig`)                                           AS `number_cash_ins`,
-         avg(( `payment_data`.`newbalanceorig` - `payment_data`.`oldbalanceorig` )) AS `average_cash_ins`,
-         sum(( `payment_data`.`newbalanceorig` - `payment_data`.`oldbalanceorig` )) AS `sum_cash_ins`
+         count(`payment_data`.`nameOrig`)                                           AS `number_cash_ins`,
+         avg(`payment_data`.`amount`) AS `average_cash_ins`,
+         sum(`payment_data`.`amount`) AS `sum_cash_ins`
 FROM     `payment_data` 
 WHERE    ( `payment_data`.`action` = 'CASH_IN' ) 
-GROUP BY `payment_data`.`nameorig`;
+GROUP BY `payment_data`.`nameOrig`;
 
 
 --
@@ -184,7 +183,6 @@ SELECT    `expenses`.`id_orig`                           AS `id_orig`,
           `receives`.`number_receives`                   AS `number_receives`, 
           `receives`.`average_received`                  AS `average_received`, 
           `receives`.`sum_received`                      AS `sum_received`, 
-          `receives`.`number_of_overdraft_attempts_dest` AS `number_of_overdraft_attempts_dest`,
           `receives`.`max_balance_dest`                  AS `max_balance_dest`, 
           `receives`.`min_balance_dest`                  AS `min_balance_dest`, 
           `cash_ins`.`id_cash`                           AS `id_cash`, 
