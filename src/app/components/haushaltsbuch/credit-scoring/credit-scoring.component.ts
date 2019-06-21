@@ -37,7 +37,7 @@ export class CreditScoringComponent implements OnInit {
     this.isLoading = true;
     let date: Date = new Date(this.saveForm.get("date").value);
     let dateD = date.getDate().toString() + "/" + date.getMonth().toString() + "/" + date.getFullYear().toString();
-    let datetime = date.getTime().toString();
+    let datetime = date.toLocaleTimeString('de-de', {hour: '2-digit', minute: '2-digit'});
     let timestamp = date.getFullYear().toString() + "-" + date.getMonth().toString() + "-" + date.getDate().toString() + " 00:00:00";
     let data: PaymentData = {
       step: 1,
