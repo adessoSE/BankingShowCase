@@ -170,22 +170,22 @@ SELECT `res`.`id_orig`                                                          
        END) AS `credit_limit` 
 FROM  (
 SELECT    `expenses`.`id_orig`                                      AS `id_orig`, 
-          isnull(`expenses`.`number_expenses`,0)                    AS `number_expenses`, 
-          isnull(`expenses`.`average_spent`, 0)                     AS `average_spent`, 
-          isnull(`expenses`.`sum_spent`, 0)                         AS `sum_spent`, 
-          isnull(`expenses`.`number_of_overdraft_attempts`, 0)      AS `number_of_overdraft_attempts`, 
-          isnull(`expenses`.`max_balance`, 0)                       AS `max_balance`, 
-          isnull(`expenses`.`min_balance`, 0)                       AS `min_balance`, 
+          ifnull(`expenses`.`number_expenses`,0)                    AS `number_expenses`, 
+          ifnull(`expenses`.`average_spent`, 0)                     AS `average_spent`, 
+          ifnull(`expenses`.`sum_spent`, 0)                         AS `sum_spent`, 
+          ifnull(`expenses`.`number_of_overdraft_attempts`, 0)      AS `number_of_overdraft_attempts`, 
+          ifnull(`expenses`.`max_balance`, 0)                       AS `max_balance`, 
+          ifnull(`expenses`.`min_balance`, 0)                       AS `min_balance`, 
           `receives`.`id_dest`                                      AS `id_dest`, 
-          isnull(`receives`.`number_receives`, 0)                   AS `number_receives`, 
-          isnull(`receives`.`average_received`, 0)                  AS `average_received`, 
-          isnull(`receives`.`sum_received`, 0)                      AS `sum_received`, 
-          isnull(`receives`.`max_balance_dest`, 0)                  AS `max_balance_dest`, 
-          isnull(`receives`.`min_balance_dest`, 0)                  AS `min_balance_dest`, 
+          ifnull(`receives`.`number_receives`, 0)                   AS `number_receives`, 
+          ifnull(`receives`.`average_received`, 0)                  AS `average_received`, 
+          ifnull(`receives`.`sum_received`, 0)                      AS `sum_received`, 
+          ifnull(`receives`.`max_balance_dest`, 0)                  AS `max_balance_dest`, 
+          ifnull(`receives`.`min_balance_dest`, 0)                  AS `min_balance_dest`, 
           `cash_ins`.`id_cash`                                      AS `id_cash`, 
-          isnull(`cash_ins`.`number_cash_ins`, 0)                   AS `number_cash_ins`, 
-          isnull(`cash_ins`.`average_cash_ins`, 0)                  AS `average_cash_ins`, 
-          isnull(`cash_ins`.`sum_cash_ins`, 0)                      AS `sum_cash_ins` 
+          ifnull(`cash_ins`.`number_cash_ins`, 0)                   AS `number_cash_ins`, 
+          ifnull(`cash_ins`.`average_cash_ins`, 0)                  AS `average_cash_ins`, 
+          ifnull(`cash_ins`.`sum_cash_ins`, 0)                      AS `sum_cash_ins` 
 FROM      ((`expenses` 
 JOIN      `receives` 
 ON       (( 
