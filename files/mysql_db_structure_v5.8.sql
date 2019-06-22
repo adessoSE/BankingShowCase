@@ -169,23 +169,23 @@ SELECT `res`.`id_orig`                                                          
                             `res`.`average_received` > 100000) THEN (round((`res`.`average_received` / 1000),0) * 20000)
        END) AS `credit_limit` 
 FROM  (
-SELECT    `expenses`.`id_orig`                           AS `id_orig`, 
-          `expenses`.`number_expenses`                   AS `number_expenses`, 
-          `expenses`.`average_spent`                     AS `average_spent`, 
-          `expenses`.`sum_spent`                         AS `sum_spent`, 
-          `expenses`.`number_of_overdraft_attempts`      AS `number_of_overdraft_attempts`, 
-          `expenses`.`max_balance`                       AS `max_balance`, 
-          `expenses`.`min_balance`                       AS `min_balance`, 
-          `receives`.`id_dest`                           AS `id_dest`, 
-          `receives`.`number_receives`                   AS `number_receives`, 
-          `receives`.`average_received`                  AS `average_received`, 
-          `receives`.`sum_received`                      AS `sum_received`, 
-          `receives`.`max_balance_dest`                  AS `max_balance_dest`, 
-          `receives`.`min_balance_dest`                  AS `min_balance_dest`, 
-          `cash_ins`.`id_cash`                           AS `id_cash`, 
-          `cash_ins`.`number_cash_ins`                   AS `number_cash_ins`, 
-          `cash_ins`.`average_cash_ins`                  AS `average_cash_ins`, 
-          `cash_ins`.`sum_cash_ins`                      AS `sum_cash_ins` 
+SELECT    `expenses`.`id_orig`                                      AS `id_orig`, 
+          isnull(`expenses`.`number_expenses`,0)                    AS `number_expenses`, 
+          isnull(`expenses`.`average_spent`, 0)                     AS `average_spent`, 
+          isnull(`expenses`.`sum_spent`, 0)                         AS `sum_spent`, 
+          isnull(`expenses`.`number_of_overdraft_attempts`, 0)      AS `number_of_overdraft_attempts`, 
+          isnull(`expenses`.`max_balance`, 0)                       AS `max_balance`, 
+          isnull(`expenses`.`min_balance`, 0)                       AS `min_balance`, 
+          `receives`.`id_dest`                                      AS `id_dest`, 
+          isnull(`receives`.`number_receives`, 0)                   AS `number_receives`, 
+          isnull(`receives`.`average_received`, 0)                  AS `average_received`, 
+          isnull(`receives`.`sum_received`, 0)                      AS `sum_received`, 
+          isnull(`receives`.`max_balance_dest`, 0)                  AS `max_balance_dest`, 
+          isnull(`receives`.`min_balance_dest`, 0)                  AS `min_balance_dest`, 
+          `cash_ins`.`id_cash`                                      AS `id_cash`, 
+          isnull(`cash_ins`.`number_cash_ins`, 0)                   AS `number_cash_ins`, 
+          isnull(`cash_ins`.`average_cash_ins`, 0)                  AS `average_cash_ins`, 
+          isnull(`cash_ins`.`sum_cash_ins`, 0)                      AS `sum_cash_ins` 
 FROM      ((`expenses` 
 JOIN      `receives` 
 ON       (( 
