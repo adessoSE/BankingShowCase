@@ -40,26 +40,23 @@ CREATE TABLE `payment_data` (
 
 
 
----
+--
 
 -- base views
 
----
-
-
-DROP VIEW IF EXISTS `expenses`;
-
+--
 
 DROP VIEW IF EXISTS `receives`;
 
 DROP VIEW IF EXISTS `cash_ins`;
 
+DROP VIEW IF EXISTS `expenses`;
 
 CREATE VIEW `expenses` AS
 SELECT   `payment_data`.`nameOrig`                                                AS `id_orig`, 
          count(`payment_data`.`nameOrig`)                                         AS `number_expenses`,
          avg(`payment_data`.`amount`) AS `average_spent`,
-         sum(payment_data`.`amount`) AS `sum_spent`, 
+         sum(`payment_data`.`amount`) AS `sum_spent`, 
          sum(`payment_data`.`isunauthorizedoverdraft`)                            AS `number_of_overdraft_attempts`,
          max(`payment_data`.`oldBalanceOrig`)                                     AS `max_balance`,
          min(`payment_data`.`newBalanceOrig`)                                     AS `min_balance`
