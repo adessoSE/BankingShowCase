@@ -16,18 +16,25 @@ export class CreditScoringComponent implements OnInit {
       name: new FormControl(''),
       betrag: new FormControl(''),
       zahlungstyp: new FormControl(''),
+      verwendungszweck: new FormControl(''),
       date: new FormControl('')
     }
   );
 
   isLoading: boolean = false;
+  users: any = []
 
   constructor(
     private paymentDataService: PaymentDataService,
     private snackBar: MatSnackBar
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.paymentDataService.loadUserData().then(data => {
+      this.users = data;
+      console.log(this.users);
+    });
+  }
 
   resetForm() {
     this.saveForm.reset();
@@ -48,7 +55,7 @@ export class CreditScoringComponent implements OnInit {
       place: "Nowhere",
       date: dateD,
       datetime: datetime,
-      verwendungszweck: "Verwendungszweck",
+      verwendungszweck: this.saveForm.get("verwendungszweck").value.toString(),
       oldBalanceOrig: 1.0,
       newBalanceOrig: 2.0,
       nameDest: "Harry Potter (563920746)",

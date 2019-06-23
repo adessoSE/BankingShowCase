@@ -17,4 +17,15 @@ export class PaymentDataService {
         console.log(data);
         return this.http.post(this.url,{payment_data: data});
     }
+
+    loadUserData(): Promise<any> {
+        return this.http
+            .get('http://localhost:3000/users').toPromise()
+            .then( (response) => {
+                return response;
+            })
+            .catch( (error) => {
+                console.log(error);
+            });
+    }
 }

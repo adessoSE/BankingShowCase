@@ -6,7 +6,8 @@ const db = mysql.createConnection({
     host: '192.168.2.102',
     user: 'root',
     password: '',
-    database: 'haushaltsbuch'
+    database: 'haushaltsbuch',
+    debug: false
 });
 
 db.connect((err) => {
@@ -37,20 +38,56 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.post('/payment-data', (req, res) => {
-    console.log("Post request on /payment-data");
-    console.log(req.body);
-    let sql = "INSERT INTO `payment_data` (`step`, `action`, `amount`, `amount_real`, `nameOrig`, `place`, `date`, `datetime`, `verwendungszweck`, `oldBalanceOrig`, `newBalanceOrig`, `nameDest`, `oldBalanceDest`, `newBalanceDest`, `isFraud`, `isFlaggedFraud`, `isUnauthorizedOverdraft`, `timestamp`) VALUES ('"+req.body.payment_data.step+"', '"+req.body.payment_data.action+"', '"+req.body.payment_data.amount+"', '"+req.body.payment_data.amount_real+"', '"+req.body.payment_data.nameOrig+"', '"+req.body.payment_data.place+"', '"+req.body.payment_data.date+"', '"+req.body.payment_data.datetime+"', '"+req.body.payment_data.verwendungszweck+"', '"+req.body.payment_data.oldBalanceOrig+"', '"+req.body.payment_data.newBalanceOrig+"', '"+req.body.payment_data.nameDest+"', '"+req.body.payment_data.oldBalanceDest+"', '"+req.body.payment_data.newBalanceDest+"', '"+req.body.payment_data.isFraud+"', '"+req.body.payment_data.isFlaggedFraud+"', '"+req.body.payment_data.isUnauthorizedOverdraft+"', '"+req.body.payment_data.datetime_timestamp+"');"
+    let sqlUserInfo = "SELECT `transactionId`, `place`, `newBalanceOrig` FROM payment_data WHERE `nameOrig` = ?;";
     console.log("Fire SQL Query...");
-    console.log("Query: "+ sql);
-    db.query(sql,(err, result) => {
+    console.log("Query: "+ sqlUserInfo);
+    db.query(sqlUserInfo, [req.body.payment_data.nameOrig], function(err, result){
         if(err){
             console.log("Sql Query err: " +err);
-            res.status(500).send({error: {message: "Error: Payment Daten nicht abgespeichert."}})
-        }
-        console.log("Payment Daten erfolgreich abgespeichert.");
-        res.status(200).send({data: {message: "Payment Daten erfolgreich abgespeichert." , error: 0} });
+            res.status(500).send({error: {message: "Error: Userinformationsabfrage nicht erfolgreich."}})
+        }        
+        let transactionsIds = result.map(row => row['transactionId']);
+        let indexOfMaximum = transactionsIds.indexOf(Math.max(...transactionsIds));
+        var latestRow = result[indexOfMaximum]
+
+        console.log("Post request on /payment-data");
+        console.log(req.body);
+        let sqlInsert = "INSERT INTO payment_data (`step`, `action`, `amount`, `amount_real`, `nameOrig`, `place`, `date`, `datetime`," +  
+                    "`verwendungszweck`, `oldBalanceOrig`, `newBalanceOrig`, `nameDest`, `oldBalanceDest`, `newBalanceDest`, `isFraud`," + 
+                    "`isFlaggedFraud`, `isUnauthorizedOverdraft`, `timestamp`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        console.log("Fire SQL Query...");
+        console.log("Query: "+ sqlInsert);
+        db.query(sqlInsert,
+            [req.body.payment_data.step, req.body.payment_data.action, req.body.payment_data.amount, req.body.payment_data.amount_real, req.body.payment_data.nameOrig,
+            latestRow["place"], req.body.payment_data.date, req.body.payment_data.datetime, req.body.payment_data.verwendungszweck, latestRow["newBalanceOrig"],
+            latestRow["newBalanceOrig"] - req.body.payment_data.amount, req.body.payment_data.nameDest, req.body.payment_data.oldBalanceDest, req.body.payment_data.newBalanceDest,
+            req.body.payment_data.isFraud, req.body.payment_data.isFlaggedFraud, req.body.payment_data.isUnauthorizedOverdraft, req.body.payment_data.datetime_timestamp] 
+            , (err, result) => {
+            if(err){ 
+                console.log("Sql Query err: " +err);
+                res.status(500).send({error: {message: "Error: Payment Daten nicht abgespeichert."}})
+            }
+            console.log("Payment Daten erfolgreich abgespeichert.");
+            res.status(200).send({data: {message: "Payment Daten erfolgreich abgespeichert." , error: 0} });
+        });
     });
-})
+});
+
+app.get('/users', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    let sql = "SELECT DISTINCT nameOrig FROM payment_data ORDER BY nameOrig LIMIT 10;";
+    console.log("Fire SQL Query...");
+    console.log("Query: "+ sql);
+    db.query(sql, (err, result) => {
+        if(err){
+            console.log("Sql Query err: " +err);
+            res.status(500).send({error: {message: "Error: Userabfrage nicht erfolgreich."}})
+        }
+        res.send(JSON.stringify(result));
+    })
+    // res.send(JSON.stringify([{"id": 1, "name": "Steven Gerard"}]));
+});
+
 
 app.listen('3000', () => {
     console.log('Server started on port 3000.');
