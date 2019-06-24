@@ -60,7 +60,8 @@ app.post('/payment-data', (req, res) => {
         db.query(sqlInsert,
             [req.body.payment_data.step, req.body.payment_data.action, req.body.payment_data.amount, req.body.payment_data.amount_real, req.body.payment_data.nameOrig,
             latestRow["place"], req.body.payment_data.date, req.body.payment_data.datetime, req.body.payment_data.verwendungszweck, latestRow["newBalanceOrig"],
-            latestRow["newBalanceOrig"] - req.body.payment_data.amount, req.body.payment_data.nameDest, req.body.payment_data.oldBalanceDest, req.body.payment_data.newBalanceDest,
+            (req.body.payment_data.action == "Cash-In") ? latestRow["newBalanceOrig"] + req.body.payment_data.amount : latestRow["newBalanceOrig"] - req.body.payment_data.amount,
+            req.body.payment_data.nameDest, req.body.payment_data.oldBalanceDest, req.body.payment_data.newBalanceDest,
             req.body.payment_data.isFraud, req.body.payment_data.isFlaggedFraud, req.body.payment_data.isUnauthorizedOverdraft, req.body.payment_data.datetime_timestamp] 
             , (err, result) => {
             if(err){ 
